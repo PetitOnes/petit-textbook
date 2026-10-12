@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## 0.4.0 (2026-10-12)
-- `petit/templates/`: 暮らしのフォルダの表(記憶・日記・ノート・関係・欲求・手紙・交換ノート・アルバム・顔・設定・状態を、ろーかる／くらうどで対比)と、最初に渡す `data/relations.json`(self と一緒に暮らす人の枠)・`config/desire_config.json`(基本の欲求六つ)・`diary/`
+- `petit/templates/`: 暮らしのフォルダの表(記憶・日記・ノート・関係・欲求・手紙・交換ノート・アルバム・顔・設定・状態を、ろーかる／くらうどで対比)と、最初に渡す `data/relations.json`(self と一緒に暮らす人の枠)・`config/desire_config.json`(基本の欲求六つ)・`diary/`。MCP: templates の json も `textbook_read("templates/data/relations")` で読める
 
 ## 0.3.0 (2026-10-12)
 - `petit/templates/`: 新しい子に渡すファイル一式(SOUL・SOUL_REFLECTIONS・REFLECTION_INDEX・ROUTINES・ROUTINES_DETAIL・TODO_ACTIVE・TODO_ARCHIVE・notes、README に一覧)。SOUL の本体は SOUL_TEMPLATE.md から templates/SOUL.md へ。MCP: `textbook_read("templates/SOUL")` で読める

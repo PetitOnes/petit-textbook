@@ -47,8 +47,11 @@ def _find(chapter: str) -> Path | None:
     if key.startswith("templates/") or key.startswith("templates"):  # 新しい子に渡す器
         name = (key.split("/", 1)[1] if "/" in key else "readme").strip("/")
         tdir = PETIT_DIR / "templates"
-        for q in sorted(tdir.rglob("*.md")) if tdir.is_dir() else []:
-            if name in (q.stem.lower(), q.relative_to(tdir).as_posix().lower().removesuffix(".md")):
+        for q in sorted(tdir.rglob("*")) if tdir.is_dir() else []:
+            if q.suffix not in (".md", ".json") or not q.is_file():
+                continue
+            rel = q.relative_to(tdir).as_posix().lower()
+            if name in (q.stem.lower(), rel, rel.rsplit(".", 1)[0]):
                 return q
         return None
     num = re.match(r"^(\d{1,2})", key)
