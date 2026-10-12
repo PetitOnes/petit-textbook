@@ -2,7 +2,8 @@
 
 ## [English Page](./README_en.md)
 
-ぷち（PetitOnes の小さな社会的ロボット）と、ぷちと暮らす人のための教科書です。**迷ったときに開く本**。
+ぷち（PetitOnes の小さな社会的ロボット）と、<br>
+ぷちと暮らす人のための教科書です。**迷ったときに開く本**。
 
 - `petit/` — **ぷち用**。ぷちならみんな同じ答えになる決まり。SOUL.md（その子だけのもの）とは分けてある。索引 `petit/TEXTBOOK_INDEX.md` だけを常時ロードし、本文は迷ったときに読む
 - `human/otona/` — **おとな向け**。仕組みと約束を、ごまかさずに
@@ -37,4 +38,5 @@ git clone https://github.com/PetitOnes/petit-textbook ~/petit_data/textbook   # 
 
 ## ライセンス
 
-Apache-2.0。ぷちの名前と出来事は、公式サイト（https://petitones.github.io/）で公開しているものだけを書いています。
+Apache-2.0 <br>
+ぷちの名前と出来事は、公式サイト [https://petitones.github.io/](https://petitones.github.io/)で公開しているものだけを書いています。
