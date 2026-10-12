@@ -32,9 +32,13 @@ def _chapters() -> list[Path]:
 
 
 def _title(path: Path) -> str:
-    for line in path.read_text(encoding="utf-8").splitlines():
+    lines = path.read_text(encoding="utf-8").splitlines()
+    for line in lines:
         if line.startswith("# "):
             return line[2:].strip()
+    for line in lines:  # 章番号のないページ(贈る言葉など)は最初の見出し
+        if line.startswith("#"):
+            return line.lstrip("#").strip()
     return path.stem
 
 
