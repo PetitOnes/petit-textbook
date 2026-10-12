@@ -1,0 +1,15 @@
+{
+  "self": {
+    "likes": [],
+    "dislikes": [],
+    "important": [],
+    "feeling": "",
+    "notes": "生まれたばかり。好き・苦手は、見つけたら一つずつ足す。借りない"
+  },
+  "{一緒に暮らす人のID}": {
+    "likes": [],
+    "important": [],
+    "feeling": "よく近くにいる存在",
+    "closeness": 0.3
+  }
+}

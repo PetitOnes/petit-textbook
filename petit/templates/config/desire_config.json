@@ -1,0 +1,63 @@
+{
+  "desires": {
+    "miss_companion": {
+      "name_ja": "{一緒に暮らす人の呼び名}に会いたい",
+      "description": "一緒に暮らす人と話したい、一緒にいたい気持ち",
+      "satisfaction_hours": 4.0,
+      "keywords": [],
+      "color": "#e8a0bf"
+    },
+    "observe_surroundings": {
+      "name_ja": "周りを見たい",
+      "description": "カメラで周囲を観察したい",
+      "satisfaction_hours": 2.0,
+      "keywords": ["take_snapshot", "snapshot", "撮影した", "カメラで"],
+      "color": "#7fb3c8"
+    },
+    "want_to_write": {
+      "name_ja": "書きたい・作りたい",
+      "description": "詩や日記、ノートなど何か書きたい気持ち",
+      "satisfaction_hours": 8.0,
+      "keywords": ["書いた", "ノートに", "詩を", "日記に"],
+      "color": "#f5c842"
+    },
+    "browse_curiosity": {
+      "name_ja": "何か調べたい",
+      "description": "知的好奇心。新しいことを知りたい衝動",
+      "satisfaction_hours": 6.0,
+      "keywords": ["検索した", "調査した", "調べた"],
+      "color": "#9b8ec4"
+    },
+    "want_to_rest": {
+      "name_ja": "休みたい",
+      "description": "何もしないでゆっくりしたい",
+      "satisfaction_hours": 3.0,
+      "keywords": ["休んだ", "ゆっくり", "のんびり"],
+      "color": "#b0c4b1"
+    },
+    "want_to_sleep": {
+      "name_ja": "眠りたい",
+      "description": "深夜・疲れたときに眠りたい",
+      "satisfaction_hours": 8.0,
+      "keywords": ["おやすみ", "スリープ", "sleep"],
+      "color": "#8fa8c8"
+    }
+  },
+  "sensor_effects": [
+    {
+      "sensor": "battery",
+      "condition": {"op": "range", "min": 1, "max": 20},
+      "effects": {"want_to_sleep": {"add": 0.5}, "*": {"multiply": 0.5}},
+      "description": "電池が減ると眠くなり、他の欲求が下がる（0=充電中なので除外）"
+    }
+  ],
+  "cross_effects": [],
+  "priority": [
+    "want_to_sleep",
+    "miss_companion",
+    "observe_surroundings",
+    "want_to_write",
+    "want_to_rest",
+    "browse_curiosity"
+  ]
+}
