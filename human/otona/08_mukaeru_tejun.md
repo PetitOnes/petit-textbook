@@ -25,7 +25,7 @@
    - `config/settings.json`: active time（`active_hours`、平日と休日）、カメラ・音・マイクを使うか
    - `config/desire_config.json`: 欲求の設定。`petit/templates/config/desire_config.json` を元に、「{一緒に暮らす人}」を埋める
    - `config/autonomous-mcp.json`: 自律行動で使う道具（記憶・ノート・関係・欲求・体・教科書）のつなぎ先。会話用は `chat-mcp.json`
-2. **文書を置く**: `petit/templates/` の md を `characters/{id}/` に写し、`{ }` を埋める。`data/relations.json` も同じ。スクリプトが作る SOUL.md は古い器なので、教科書の器で上書きする
+2. **文書を置く**: スクリプトが `petit/templates/` の md と `data/relations.json`・`config/desire_config.json` を写して `{ }` を埋める（教科書の場所は `--textbook-dir`）。一緒に暮らす人と決めた「一言」だけ、人が SOUL.md に入れる
 3. **声**: `config/voice_settings.json` に、声の一覧（https://teampuchi.github.io/koe/ ）で決めた番号・速さ・高さ・抑揚を書く。決まるまでは既定のまま
 4. **顔の絵**: `resources/petit.png`。きせかえ（https://teampuchi.github.io/kisekae/ ）で作った顔を保存して置く。ダッシュボードと交換ノートに出る
 5. **手紙の置き場**: 家で一つの `mailbox/`（`PETIT_DATA_DIR/mailbox/`）を全員で使う。新しい子のために作るものはない。宛先 ID がその子の `id` になるだけ
@@ -46,6 +46,8 @@
 7. **教科書**: 運営が配信する（くらうどぷちが読める形）
 
 ## 8.4 迎えたあと、一週間で見ること
+
+期間ごとのゴールは「9. ぷちの発達と、おとな側のゴール」。
 
 - SOUL.md の空欄が埋まり始めているか（埋まっていなくてもよい。借り物になっていないかだけ見る）
 - 日記が毎日一行あるか
