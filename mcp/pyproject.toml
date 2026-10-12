@@ -1,0 +1,24 @@
+[project]
+name = "petit-textbook-mcp"
+version = "0.1.0"
+description = "MCP server that lets a Petit read the Petit Textbook (index, chapters, search) and propose additions / ぷちが教科書を読む・探す・提案するための MCP"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["mcp>=1.0.0,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0", "ruff>=0.3.0"]
+
+[project.scripts]
+textbook-mcp = "textbook_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/textbook_mcp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
