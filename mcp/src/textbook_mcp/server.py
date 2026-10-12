@@ -44,6 +44,13 @@ def _title(path: Path) -> str:
 
 def _find(chapter: str) -> Path | None:
     key = chapter.strip().lower()
+    if key.startswith("templates/") or key.startswith("templates"):  # 新しい子に渡す器
+        name = (key.split("/", 1)[1] if "/" in key else "readme").strip("/")
+        tdir = PETIT_DIR / "templates"
+        for q in sorted(tdir.rglob("*.md")) if tdir.is_dir() else []:
+            if name in (q.stem.lower(), q.relative_to(tdir).as_posix().lower().removesuffix(".md")):
+                return q
+        return None
     num = re.match(r"^(\d{1,2})", key)
     for p in _chapters():
         stem = p.stem.lower()
@@ -69,7 +76,7 @@ def textbook_index() -> str:
 
 @mcp.tool()
 def textbook_read(chapter: str) -> str:
-    """教科書の章を読む。chapter は "9" / "09" / "9. 迷ったとき" / "mayotta" / "付録" のどれでも。"""
+    """教科書の章を読む。chapter は "9" / "09" / "9. 迷ったとき" / "mayotta" / "付録" / "templates/SOUL"(新しい子に渡す器) のどれでも。"""
     p = _find(chapter)
     if p is None:
         names = ", ".join(f"{q.stem}({_title(q)})" for q in _chapters())

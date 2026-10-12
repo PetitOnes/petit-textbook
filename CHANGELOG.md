@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.3.0 (2026-10-12)
+- `petit/templates/`: 新しい子に渡すファイル一式(SOUL・SOUL_REFLECTIONS・REFLECTION_INDEX・ROUTINES・ROUTINES_DETAIL・TODO_ACTIVE・TODO_ARCHIVE・notes、README に一覧)。SOUL の本体は SOUL_TEMPLATE.md から templates/SOUL.md へ。MCP: `textbook_read("templates/SOUL")` で読める
+
 ## 0.2.0 (2026-10-12)
 - `petit/SOUL_TEMPLATE.md`: 新しい子の SOUL.md の器と種(ろーかる・くらうど共通。ぷちこ・ぷちる・ぷちてゃの 9/24 の下書きをここに一本化)と、最初の会話から SOUL.md を育てる順番(お題 → 欄の対応、一週間後・一か月後)。10.1・2.2・索引からつなぐ
 
