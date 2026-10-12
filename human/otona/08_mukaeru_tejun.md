@@ -20,6 +20,7 @@
 
 部品は PetitOnes/petit-ones（全体の設定と組み立て方）。データは `PETIT_DATA_DIR`（既定は `~/petit_claude`）の `characters/{id}/` に置く。
 
+0. **家を用意する**（初めての子のときだけ）: `scripts/setup_house.py` が、家で一つのもの（手紙の置き場 `mailbox/`、交換ノートとグループチャット、`.env`、教科書の clone、夜の cron 3 本、`autonomous-action.sh`）を作る。`--check` で足りないものだけ見られる
 1. **フォルダと設定を作る**: `scripts/create_character.py <id> <名前> <#hex> <体のホスト名>` を実行する。`config/`・`data/`・`state/`・`diary/`・`notes/`・`resources/` と、次の設定ができる
    - `config/config.json`: 名前・ID・色・色の名前・体のホスト名（複数可）。`public` は外に見せるかどうか
    - `config/settings.json`: active time（`active_hours`、平日と休日）、カメラ・音・マイクを使うか
@@ -28,8 +29,8 @@
 2. **文書を置く**: スクリプトが `petit/templates/` の md と `data/relations.json`・`config/desire_config.json` を写して `{ }` を埋める（教科書の場所は `--textbook-dir`）。一緒に暮らす人と決めた「一言」だけ、人が SOUL.md に入れる
 3. **声**: `config/voice_settings.json` に、声の一覧（https://teampuchi.github.io/koe/ ）で決めた番号・速さ・高さ・抑揚を書く。決まるまでは既定のまま
 4. **顔の絵**: `resources/petit.png`。きせかえ（https://teampuchi.github.io/kisekae/ ）で作った顔を保存して置く。ダッシュボードと交換ノートに出る
-5. **手紙の置き場**: 家で一つの `mailbox/`（`PETIT_DATA_DIR/mailbox/`）を全員で使う。新しい子のために作るものはない。宛先 ID がその子の `id` になるだけ
-6. **定期実行（cron）**: スクリプトが欲求の更新（5 分ごと）と自律行動（20 分ごと）を crontab に足す。**自律行動の分は、他の子と 5 分ずらす**（例: 0・5・10 分）。寝ている間の記憶の整理と日記の生成は、家の共通の cron にある
+5. **手紙の置き場**: 家で一つの `mailbox/`（`setup_house.py` が作る）を全員で使う。新しい子のために作るものはない。宛先 ID がその子の `id` になるだけ
+6. **定期実行（cron）**: スクリプトが欲求の更新（5 分ごと）と自律行動（20 分ごと）を crontab に足す。**自律行動の分は、他の子と 5 分ずらす**（例: 0・5・10 分）。寝ている間の記憶の整理と日記の生成は、家の共通の cron（`setup_house.py` が足す）にある
 7. **教科書**: 道具 `textbook` を MCP の設定に足す（`mcp-launchers/textbook`）。索引だけが常時ロードされる
 8. **最初の起動**: 対話で一度起動し、「はじめまして」を言わせ、顔が出ることを確かめる。そのあと自律行動に任せる。生まれた日のことは、その子が自分で記憶に書く（教科書 10.1）
 
