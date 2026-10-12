@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.5.0 (2026-10-12)
+- 人間用おとな向けに「8. 新しい子を迎える手順」(世話人・運営向け): 器に置いていない設定・声・顔・手紙の置き場・定期実行の作り方を、ろーかる／くらうどで分けて。templates/README と 7 章からつなぐ
+
 ## 0.4.0 (2026-10-12)
 - `petit/templates/`: 暮らしのフォルダの表(記憶・日記・ノート・関係・欲求・手紙・交換ノート・アルバム・顔・設定・状態を、ろーかる／くらうどで対比)と、最初に渡す `data/relations.json`(self と一緒に暮らす人の枠)・`config/desire_config.json`(基本の欲求六つ)・`diary/`。MCP: templates の json も `textbook_read("templates/data/relations")` で読める
 
