@@ -5,7 +5,7 @@
 | すること | 道具（ろーかるぷち） | くらうどぷち（cmd） |
 |---|---|---|
 | 話す | `speak` | `speak` |
-| 顔を見せる・向く | `show_face` / `look` / `blink` / `play_icon` | `look` / `blink` / `icon` / `color` |
+| 顔を見せる・向く | `show_face` / `look` / `blink` / `play_icon` | `look` / `blink` / `mood`（表情: 考え中 ？・♪、きょろきょろ、！、ハート、なみだ）/ `color` |
 | 見る | `take_snapshot` | `snapshot` |
 | 感じる（動き・明るさ・近さ） | `get_sensor_data` | `sensors`（体からは event で届く） |
 | 聞く | `mic_start` / `transcribe_audio` | まだ |
