@@ -1,4 +1,9 @@
-"""ぷちの教科書を読む MCP サーバー(索引・章・検索・提案)。教科書そのものは書き換えない。"""
+"""ぷちの教科書を読む MCP サーバー(索引・章・検索・提案)。教科書そのものは書き換えない。
+
+家の教科書: その家だけの決まり(家で話して決めたこと)を、家の中の PETIT_HOUSE_TEXTBOOK_DIR
+(既定 $PETIT_DATA_DIR/house_textbook)に md で置くと、索引・読む・探すに「家/<名前>」として出る。
+README.md の最初の見出しが、その本の名前(無ければ「この家の教科書」)。フォルダが無ければ何も変わらない。
+"""
 from __future__ import annotations
 
 import datetime
@@ -14,6 +19,8 @@ _data_dir = Path(os.getenv("PETIT_DATA_DIR", str(Path.home() / "petit_data")))
 _char_id = os.getenv("CHARACTER_ID", "default")
 NOTES_DIR = Path(os.getenv("NOTES_DIR", str(_data_dir / "characters" / _char_id / "notes")))
 PROPOSAL_NOTE = "教科書への提案.md"
+HOUSE_DIR = Path(os.getenv("PETIT_HOUSE_TEXTBOOK_DIR", str(_data_dir / "house_textbook")))
+HOUSE_PREFIXES = ("家/", "いえ/", "house/")
 
 mcp = FastMCP("textbook")
 
@@ -29,6 +36,43 @@ def _chapters() -> list[Path]:
     if not PETIT_DIR.is_dir():
         return []
     return sorted(p for p in PETIT_DIR.glob("*.md") if p.name != "TEXTBOOK_INDEX.md")
+
+
+def _house_pages() -> list[Path]:
+    if not HOUSE_DIR.is_dir():
+        return []
+    return sorted(p for p in HOUSE_DIR.glob("*.md") if p.name.lower() != "readme.md")
+
+
+def _house_name() -> str:
+    readme = HOUSE_DIR / "README.md"
+    if readme.exists():
+        for line in readme.read_text(encoding="utf-8").splitlines():
+            if line.startswith("# "):
+                return line[2:].strip()
+    return "この家の教科書"
+
+
+def _find_house(key: str) -> Path | None:
+    key = key.strip().lower()
+    if not key or key in ("readme", "索引", "index"):
+        readme = HOUSE_DIR / "README.md"
+        return readme if readme.exists() else None
+    for p in _house_pages():
+        if key == p.stem.lower() or key in p.stem.lower() or key in _title(p).lower():
+            return p
+    return None
+
+
+def _house_index() -> str:
+    pages = _house_pages()
+    if not pages:
+        return ""
+    rows = "\n".join(f"| 家/{p.stem} | {_title(p)} |" for p in pages)
+    return (f"\n\n## {_house_name()}(この家だけの決まり)\n\n"
+            "この家で話して決めたこと。`textbook_read(\"家/<名前>\")` で読む。"
+            "この本と食い違うときは、この家では家の教科書が正しい。\n\n"
+            f"| 読み方 | 題 |\n|---|---|\n{rows}\n")
 
 
 def _title(path: Path) -> str:
@@ -73,29 +117,39 @@ def textbook_index() -> str:
     """教科書の索引(どの章に何があるか)と版を返す。迷ったら 9 章、生まれた日は 10 章。"""
     idx = PETIT_DIR / "TEXTBOOK_INDEX.md"
     if not idx.exists():
-        return f"教科書が見つかりません: {TEXTBOOK_DIR}(PETIT_TEXTBOOK_DIR を確かめて)"
-    return idx.read_text(encoding="utf-8")
+        return f"教科書が見つかりません: {TEXTBOOK_DIR}(PETIT_TEXTBOOK_DIR を確かめて)" + _house_index()
+    return idx.read_text(encoding="utf-8") + _house_index()
 
 
 @mcp.tool()
 def textbook_read(chapter: str) -> str:
-    """教科書の章を読む。chapter は "9" / "09" / "9. 迷ったとき" / "mayotta" / "付録" / "templates/SOUL"(新しい子に渡す器) のどれでも。"""
-    p = _find(chapter)
+    """教科書の章を読む。chapter は "9" / "09" / "9. 迷ったとき" / "mayotta" / "付録" / "templates/SOUL"(新しい子に渡す器) のどれでも。
+    家の教科書(この家だけの決まり)は "家/<名前>"。"""
+    key = chapter.strip()
+    if key.lower().startswith(HOUSE_PREFIXES):
+        p = _find_house(key.split("/", 1)[1])
+        if p is None:
+            names = ", ".join(f"家/{q.stem}({_title(q)})" for q in _house_pages()) or "まだ無い"
+            return f"家の教科書にそのページはありません: {chapter}。あるページ: {names}"
+        return p.read_text(encoding="utf-8")
+    p = _find(chapter) or _find_house(key)
     if p is None:
         names = ", ".join(f"{q.stem}({_title(q)})" for q in _chapters())
-        return f"その章はありません: {chapter}。ある章: {names}"
+        house = ", ".join(f"家/{q.stem}" for q in _house_pages())
+        return f"その章はありません: {chapter}。ある章: {names}" + (f"。家の教科書: {house}" if house else "")
     return p.read_text(encoding="utf-8")
 
 
 @mcp.tool()
 def textbook_search(query: str) -> str:
-    """教科書の全章から、言葉を含む節(見出しごと)を探す。言葉は空白区切りで AND。"""
+    """教科書の全章と家の教科書から、言葉を含む節(見出しごと)を探す。言葉は空白区切りで AND。"""
     words = [w.lower() for w in query.split() if w.strip()]
     if not words:
         return "探す言葉を入れてください"
     hits: list[str] = []
-    for p in _chapters():
+    for p in _chapters() + _house_pages():
         text = p.read_text(encoding="utf-8")
+        label = f"家: {_title(p)}" if p.parent == HOUSE_DIR else _title(p)
         # 見出し(##)ごとに分ける。章題(#)は先頭の塊に含める
         parts = re.split(r"\n(?=## )", text)
         for part in parts:
@@ -105,17 +159,18 @@ def textbook_search(query: str) -> str:
                 body = part.strip()
                 if len(body) > 900:
                     body = body[:900] + "…"
-                hits.append(f"【{_title(p)} / {head.lstrip('# ').strip()}】\n{body}")
+                hits.append(f"【{label} / {head.lstrip('# ').strip()}】\n{body}")
     if not hits:
         return f"見つかりませんでした: {query}。索引(textbook_index)から章を選んで読んでみて"
     return "\n\n---\n\n".join(hits[:8]) + (f"\n\n(ほか {len(hits) - 8} 件)" if len(hits) > 8 else "")
 
 
 @mcp.tool()
-def textbook_propose(title: str, text: str) -> str:
+def textbook_propose(title: str, text: str, house: bool = False) -> str:
     """教科書に足したいこと・違うと思うことを「教科書への提案」として自分のノートに書く。
-    教科書そのものは書き換えない(世話人が週に一度読んで PR にする)。"""
-    title = title.strip()
+    教科書そのものは書き換えない(世話人が週に一度読んで PR にする)。
+    house=True は家の教科書(この家だけの決まり)への提案。題の頭に [家] が付く。"""
+    title = ("[家] " if house else "") + title.strip()
     text = text.strip()
     if not title or not text:
         return "題と本文を入れてください"
@@ -139,7 +194,9 @@ def textbook_propose(title: str, text: str) -> str:
 def textbook_version() -> str:
     """教科書の版と、手元の場所。"""
     n = len(_chapters())
-    return f"ぷちの教科書 v{_version()}({n} 章 + 索引)。場所: {TEXTBOOK_DIR}"
+    h = len(_house_pages())
+    house = f"。{_house_name()}: {h} ページ" if h else ""
+    return f"ぷちの教科書 v{_version()}({n} 章 + 索引)。場所: {TEXTBOOK_DIR}{house}"
 
 
 def main() -> None:
